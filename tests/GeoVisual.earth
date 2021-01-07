@@ -1,0 +1,90 @@
+<!-- 
+osgEarth Sample - GDAL
+Demonstrates the simplest possible use of the GDAL layer to load a GeoTIFF image.
+-->
+
+<Map name="GeoVisual Example">
+    <TMSImage name="Globe Image">
+        <url>E:/Proj_data/TMS/google_hd/tiles/tms.xml</url>
+    </TMSImage>
+	
+	<MBTilesImage name="China Image">
+        <url>E:/Proj_data/TMS/google_image_8_14.mbtiles</url>
+    </MBTilesImage>
+	
+	<MBTilesImage name="Shanghai Image">
+        <url>E:/Proj_data/TMS/shanghai15-18.mbtiles</url>
+    </MBTilesImage>
+	
+	<MBTilesImage name="Shenzhen Image">
+        <url>E:/Proj_data/TMS/shenzhen15-19.mbtiles</url>
+    </MBTilesImage>
+	
+	<ThreeDTiles>
+		<url>D:/Proj/Data/model/3dtiles/shenzhen1/tileset.json</url>
+	</ThreeDTiles>
+	
+	<ThreeDTiles>
+		<url>D:/Proj/Data/model/3dtiles/shenzhen2/tileset.json</url>
+	</ThreeDTiles>
+	
+
+	<FeatureModel name="Buildings" max_range="20000">
+         
+        <OGRFeatures name="buildings">
+            <url>../data/shanghai/shanghai.shp</url>
+        </OGRFeatures>
+        
+        <!--
+         ! The "layout" element activates tiling and paging of the feature set. If you
+         ! omit the layout element, the entire feature set will render as one pre-loaded
+         ! model (no tiling or paging).
+         !  
+         ! Each "level" is a level of detail for features, and should select a style
+         ! to use for that level. It also can specify min and max camera ranges, in meters.
+         -->
+        
+        <layout tile_size="500">
+            <level name="default" max_range="20000" style="buildings"/>
+        </layout>
+        
+        <styles>            
+            <library name="us_resources">
+                <url>../data/resources/textures_us/catalog.xml</url>
+            </library>
+            
+            <style type="text/css">
+                buildings {
+                    extrusion-height:        3.5 * max([Floor], 1);
+                    extrusion-flatten:       true;
+                    extrusion-wall-style:    building-wall;
+                    extrusion-wall-gradient: 0.5;
+                    extrusion-roof-style:    building-rooftop;
+                    altitude-clamping:       terrain;
+                    altitude-technique:      map;
+                    altitude-binding:        vertex;
+                }            
+                building-wall {
+                    skin-library:     us_resources;
+                    skin-tags:        building;
+                    skin-random-seed: 1;
+                }
+                building-rooftop {
+                    skin-library:     us_resources;
+                    skin-tags:        rooftop;
+                    skin-tiled:       true;
+                    skin-random-seed: 1;
+                }
+            </style>
+        </styles>   
+    </FeatureModel>
+	
+	    
+    <viewpoints time="1.0">
+        <viewpoint name="Shanghai" heading="24.261" height="0" lat="31.23" long="121.52" pitch="-21.6" range="3450"/>
+        <viewpoint name="shenzhen" heading="24.261" height="0" lat="22.604" long="114.036" pitch="-21.6" range="3450"/>
+    </viewpoints>
+  
+    
+    
+</Map>

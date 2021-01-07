@@ -6,8 +6,8 @@ Access image layers from the Cesium Ion service, available at https://cesium.com
 <map name="Cesium Ion">
  
     <CesiumIonImage name="cesiumion bluemarble">
-        <asset_id>3845</asset_id>
-        <token>YOUR-TOKEN_HERE</token>
+        <asset_id>3</asset_id>
+        <token>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI0YWM0YmQ1MS0yZjhiLTQ3YWItYmMzYS1lYmZmYjU1NWY5ZDIiLCJpZCI6ODUwLCJpYXQiOjE1MjYwMzc3MjJ9.DGEcO5onjCVbWgM89nGjh9h1sljPU_DZZ_L0K7m2rcM</token>
     </CesiumIonImage>
 
 </map>
