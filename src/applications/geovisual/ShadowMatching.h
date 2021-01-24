@@ -6,6 +6,8 @@
 #include <osgViewer/Viewer>
 #include <osgEarth/MapNode>
 
+#include "SqliteData.h"
+
 namespace osgEarth {
 	class ShadowMatching
 	{
@@ -28,6 +30,8 @@ namespace osgEarth {
 		osg::ref_ptr<osg::Geometry> _geom;
 		osg::ref_ptr<osg::Vec3dArray> _vec;
 		osg::Vec3d _baseVector;
+
+		SqliteData* _sqliteData;
 	};
 
 }

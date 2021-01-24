@@ -1,15 +1,15 @@
 /*
+ * @File: ShadowMatching.cpp
  * @Author: hzh
- * @Date: 2021-01-03 14:55:12
- * @Last Modified by: hzh
- * @Last Modified time: 2020-11-16 20:41:22
+ * @Date: 2021/01/09 22:07
+ * 
  */
-
 #include "ShadowMatching.h"
 #include <osgEarth/GeoMath>
 #include <osgUtil/RayIntersector>
 #include <osg/CoordinateSystemNode>
 #include <osg/MatrixTransform>
+
 
 
 #define LC "[geovisual] "
@@ -27,6 +27,13 @@ ShadowMatching::ShadowMatching(osgViewer::Viewer* view)
 	_geom = new osg::Geometry();
 	_vec = new osg::Vec3dArray();
 	_baseVector = osg::Vec3d(-2850000.0, 4650000.0, 3280000.0); //基准数值，防止世界坐标数值太大，出现闪动
+
+	_sqliteData = new SqliteData();
+	_sqliteData->procdata();
+
+	_sqliteData->putMetadata("name", "Shadow Matching results");
+	_sqliteData->putMetadata("location", "Shanghai urban area");
+	_sqliteData->putMetadata("description", "sqilte database for building boundary map results calculated by shadow matching altorithm");
 }
 
 ShadowMatching::~ShadowMatching()
@@ -101,6 +108,7 @@ ShadowMatching::Intersection(osg::Vec3 pos, int interval)
 		v2.y() = getElevation(pos, i, 7, 90);
 		v2array->push_back(v2);
 		s += "[" + toString<int>(int(i)) + "," + toString<int>(int(v2.y())) + "],";
+		_sqliteData->putMapData(pos.x(), pos.y(), v2.x(), v2.y());
 	}
 	_geom->setVertexArray(_vec.get());
 	osg::ref_ptr<osg::Vec4Array> vc = new osg::Vec4Array();

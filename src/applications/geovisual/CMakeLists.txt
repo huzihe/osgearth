@@ -1,7 +1,13 @@
 INCLUDE_DIRECTORIES(${OSG_INCLUDE_DIRS} )
 SET(TARGET_LIBRARIES_VARS OSG_LIBRARY OSGDB_LIBRARY OSGUTIL_LIBRARY OSGVIEWER_LIBRARY OPENTHREADS_LIBRARY)
 
-SET(TARGET_SRC geovisual.cpp )
+SET(TARGET_SRC
+	geovisual.cpp
+	ShadowMatching.h
+	ShadowMatching.cpp
+	SqliteData.h
+	SqliteData.cpp
+	)
 
 #### end var setup  ###
 SETUP_APPLICATION(geovisual)

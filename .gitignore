@@ -1,3 +1,28 @@
+*.suo
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+
+# Visual Studio - Build Results
+[Dd]ebug/
+[Rr]elease/
+[Mm]in[Ss]ize[Rr]el/
+[Rr]el[Ww]ith[Dd]eb[Ii]nfo/
+
+# Visual Studio - Browsing Database File
+*.sdf
+*.opensdf
+
+# Visual Studio - Cache/Options Directory
+.vs/
+
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Makefile
+cmake_install.cmake
+install_manifest*.txt
+
 /build-pkg
 /data
 .directory
