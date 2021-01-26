@@ -21,6 +21,8 @@ namespace osgEarth {
 
 		bool putMapData(double lon, double lat, float amuzith, float elevation);
 
+		bool putShadowmap(double lon, double lat, const std::string& mapdata);
+
 	private:
 		void* _database;
 		std::string _fullFilename;

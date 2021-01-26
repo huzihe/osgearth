@@ -121,7 +121,7 @@ namespace osgEarth {
 					if (m_vecPostion == pos && m_vecPostion != osg::Vec3d(0, 0, 0))
 					{
 						ShadowMatching* s = new osgEarth::ShadowMatching(_viewer);
-						s->Intersection(m_vecPostion, 2);
+						//s->Intersection(m_vecPostion, 2);
 
 						Style pm;
 						pm.getOrCreate<IconSymbol>()->url()->setLiteral("../data/placemark32.png");

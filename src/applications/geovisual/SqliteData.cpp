@@ -71,9 +71,21 @@ bool osgEarth::SqliteData::createTable()
 	}
 
 	query =
+		"CREATE TABLE IF NOT EXISTS shadowmap (" \
+		" longitude double," \
+		" latitude double," \
+		" smmap text);";
+
+	if (SQLITE_OK != sqlite3_exec(db, query.c_str(), 0L, 0L, 0L))
+	{
+		OE_WARN << LC << "Failed to create table [shadowmap]" << sqlite3_errmsg(db) << std::endl;
+		return false;
+	}
+
+	query =
 		"CREATE TABLE IF NOT EXISTS map (" \
-		" longitude doublue," \
-		" latitude doublue," \
+		" longitude double," \
+		" latitude double," \
 		" azimuth float," \
 		" elevation float);";
 		
@@ -130,7 +142,7 @@ bool osgEarth::SqliteData::putMapData(double lon, double lat, float amuzith, flo
 
 	// Prep the insert statement:
 	sqlite3_stmt* insert = NULL;
-	std::string query = "INSERT OR REPLACE INTO map (latitude, longitude, azimuth, elevation) VALUES (?, ?, ?, ?)";
+	std::string query = "INSERT OR REPLACE INTO map (longitude, latitude, azimuth, elevation) VALUES (?, ?, ?, ?)";
 	int rc = sqlite3_prepare_v2(database, query.c_str(), -1, &insert, 0L);
 	if (rc != SQLITE_OK)
 	{
@@ -161,4 +173,31 @@ bool osgEarth::SqliteData::putMapData(double lon, double lat, float amuzith, flo
 
 
 	return false;
+}
+
+bool osgEarth::SqliteData::putShadowmap(double lon, double lat, const std::string & mapdata)
+{
+	Threading::ScopedMutexLock exclusiveLock(_mutex);
+
+	sqlite3* database = (sqlite3*)_database;
+
+	// Prep the insert statement:
+	sqlite3_stmt* insert = NULL;
+	std::string query = "INSERT OR REPLACE INTO shadowmap (longitude, latitude, smmap) VALUES (?, ?, ?)";
+	int rc = sqlite3_prepare_v2(database, query.c_str(), -1, &insert, 0L);
+	if (rc != SQLITE_OK)
+	{
+		OE_WARN << LC << "Failed to prepare SQL: " << query << "; " << sqlite3_errmsg(database);
+		return false;
+	}
+
+	// bind parameters:
+	sqlite3_bind_double(insert, 1, lon);
+	sqlite3_bind_double(insert, 2, lat);
+	sqlite3_bind_text(insert, 3, mapdata.c_str(), mapdata.length(), SQLITE_STATIC);
+
+	sqlite3_step(insert);
+	sqlite3_finalize(insert);
+
+	return true;
 }
