@@ -28,7 +28,7 @@ namespace osgEarth {
 		//¸ñÍøµã
 		bool showGridPoints();
 
-		void caculateSM(osg::Vec2 lb, osg::Vec2 rt, double interval);
+		void caculateSM(osg::Vec2d lb, osg::Vec2d rt, double interval);
 
 		bool isIntersected(osg::Vec3 pos);
 

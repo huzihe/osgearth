@@ -42,8 +42,8 @@ ShadowMatching::ShadowMatching(osgViewer::Viewer* view)
 	_sqliteData->putMetadata("description", "sqilte database for building boundary map results calculated by shadow matching altorithm");
 
 	//test 
-	osg::Vec2 lf = osg::Vec2(121.519000, 31.239000);  //121.450, 31.200
-	osg::Vec2 rt = osg::Vec2(121.520000, 31.240000);  //121.550, 31.250
+	osg::Vec2d lf = osg::Vec2d(121.526666, 31.223611);  //121.450, 31.200
+	osg::Vec2d rt = osg::Vec2d(121.530833, 31.228333);  //121.550, 31.250
 	caculateSM(lf, rt, 0.00002);
 }
 
@@ -109,7 +109,6 @@ ShadowMatching::getElevation(osg::Vec3 pos, float azimuth, float start, float en
 void 
 ShadowMatching::Intersection(osg::Vec3 pos, int interval)
 {
-	osg::Vec2Array* v2array = new osg::Vec2Array;
 	std::string s = "";
 
 	for (int i = 0; i < 360; i += interval)
@@ -117,16 +116,15 @@ ShadowMatching::Intersection(osg::Vec3 pos, int interval)
 		osg::Vec2 v2 = osg::Vec2();
 		v2.x() = i;
 		v2.y() = getElevation(pos, i, 7, 90);
-		v2array->push_back(v2);
 
 		s += "[" + toString<int>(int(i)) + "," + toString<int>(int(v2.y())) + "],";
 
-		//将数据存入sqlite数据库中
-		_sqliteData->putMapData(pos.x(), pos.y(), v2.x(), v2.y());
+		////将数据存入sqlite数据库中
+		//_sqliteData->putMapData(pos.x(), pos.y(), v2.x(), v2.y());
 	}
 	_sqliteData->putShadowmap(pos.x(), pos.y(), s);
 	//用于显示建筑模型相交点
-	showIntersectPoints();
+	//showIntersectPoints();
 }
 
 
@@ -170,7 +168,7 @@ bool osgEarth::ShadowMatching::showGridPoints()
 	return false;
 }
 
-void osgEarth::ShadowMatching::caculateSM(osg::Vec2 lb, osg::Vec2 rt, double interval)
+void osgEarth::ShadowMatching::caculateSM(osg::Vec2d lb, osg::Vec2d rt, double interval)
 {
 	for (double i = lb.x(); i < rt.x(); i += interval)
 	{
@@ -184,6 +182,8 @@ void osgEarth::ShadowMatching::caculateSM(osg::Vec2 lb, osg::Vec2 rt, double int
 		}
 	}
 	showGridPoints();
+	showIntersectPoints();
+
 }
 
 //判断点是否在建筑面外
