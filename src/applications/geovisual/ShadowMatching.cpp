@@ -10,6 +10,8 @@
 #include <osg/CoordinateSystemNode>
 #include <osg/MatrixTransform>
 
+#include <string>
+
 
 
 #define LC "[geovisual] "
@@ -51,7 +53,7 @@ ShadowMatching::~ShadowMatching()
 {
 }
 
-int 
+bool 
 ShadowMatching::pickFromAzimuthAndElevation(osg::Vec3 pos, float azimuth, float elevation)
 {
 	float azi = osg::DegreesToRadians(azimuth);
@@ -78,9 +80,9 @@ ShadowMatching::pickFromAzimuthAndElevation(osg::Vec3 pos, float azimuth, float 
 		_vec->push_back(iter->getWorldIntersectPoint() - _baseVector);
 
 		//OSG_NOTICE << "This is a hit test!";
-		return 0;
+		return true;
 	}
-	return -1;
+	return false;
 }
 
 float 
@@ -93,8 +95,8 @@ ShadowMatching::getElevation(osg::Vec3 pos, float azimuth, float start, float en
 	}
 	else
 	{
-		float flag = pickFromAzimuthAndElevation(pos, azimuth, half);
-		if (flag != -1) {
+		bool flag = pickFromAzimuthAndElevation(pos, azimuth, half);
+		if (flag) {
 			result = getElevation(pos, azimuth, half, end);
 		}
 		else
@@ -113,12 +115,15 @@ ShadowMatching::Intersection(osg::Vec3 pos, int interval)
 
 	for (int i = 0; i < 360; i += interval)
 	{
-		osg::Vec2 v2 = osg::Vec2();
-		v2.x() = i;
-		v2.y() = getElevation(pos, i, 7, 90);
+		//osg::Vec2 v2 = osg::Vec2();
+		//v2.x() = i;
+		//v2.y() = getElevation(pos, i, 7, 90);
+		//s += "[" + toString<int>(int(i)) + "," + toString<int>(int(v2.y())) + "],";  //转字符串效率不高
 
-		s += "[" + toString<int>(int(i)) + "," + toString<int>(int(v2.y())) + "],";
-
+		int j = getElevation(pos, i, 7, 90);
+		//s += "[" + int_to_string(i) + "," + int_to_string(j) + "],";
+		s += int_to_string(j) + ",";
+		
 		////将数据存入sqlite数据库中
 		//_sqliteData->putMapData(pos.x(), pos.y(), v2.x(), v2.y());
 	}
@@ -209,4 +214,27 @@ bool osgEarth::ShadowMatching::isIntersected(osg::Vec3 pos)
 	}
 	_vecGrid->push_back(world - _baseVector);
 	return true;
+}
+
+
+std::string osgEarth::ShadowMatching::int_to_string(int value) {
+
+	static const char digits[19] = {
+		'9','8','7','6','5','4','3','2','1','0',
+		'1','2','3','4','5','6','7','8','9'
+	};
+	static const char* zero = digits + 9;//zero->'0'
+
+	char buf[24];      //不考虑线程安全的情况时，可以改成静态变量
+	int i = value;
+	char *p = buf + 24;
+	*--p = '\0';
+	do {
+		int lsd = i % 10;
+		i /= 10;
+		*--p = zero[lsd];
+	} while (i != 0);
+	if (value < 0)
+		*--p = '-';
+	return std::string(p);
 }

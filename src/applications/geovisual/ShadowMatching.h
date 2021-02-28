@@ -8,15 +8,17 @@
 
 #include "SqliteData.h"
 
+using namespace osg;
+
 namespace osgEarth {
-	class ShadowMatching
+	class ShadowMatching : public Referenced
 	{
 	public:
 		ShadowMatching(osgViewer::Viewer* view);
 
 		~ShadowMatching();
 
-		int pickFromAzimuthAndElevation(osg::Vec3 pos, float azimuth, float elevation);
+		bool pickFromAzimuthAndElevation(osg::Vec3 pos, float azimuth, float elevation);
 
 		float getElevation(osg::Vec3 pos, float azimuth, float start, float end);
 
@@ -31,6 +33,8 @@ namespace osgEarth {
 		void caculateSM(osg::Vec2d lb, osg::Vec2d rt, double interval);
 
 		bool isIntersected(osg::Vec3 pos);
+
+		std::string int_to_string(int value);
 
 	private:
 		osg::ref_ptr<osgViewer::Viewer> _view;
